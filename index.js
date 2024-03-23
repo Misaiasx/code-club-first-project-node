@@ -1,14 +1,17 @@
 const express = require("express")
 const uuid = require('uuid')
-const port = 3000
+const cors = require('cors')
+// import cors from "cors"
+const port = 3001
 const app =express()
 app.use(express.json())
+app.use(cors())
 
-const projects = []
+const users = []
 
 const checkUserId = (request , response, next)=>{
     const {id} = request.params
-    const index = projects.findIndex(user => user.id === id)
+    const index = users.findIndex(user => user.id === id)
 
     if(index < 0){
 
@@ -24,29 +27,29 @@ const checkUserId = (request , response, next)=>{
 
 
 
-app.get('/projects',(request, response)=>{
+app.get('/users',(request, response)=>{
 
     
 
-   return response.json(projects)
+   return response.json(users)
 })
-app.post('/projects', (request, response)=>{
+app.post('/users', (request, response)=>{
     const { name,age} = request.body
 
     const user = {id:uuid.v4(), name,age}
-    projects.push(user)
+    users.push(user)
 
     return response.status(201).json(user)
 })
 
-app.put('/projects/:id', checkUserId, (request, response)=>{
+app.put('/users/:id', checkUserId, (request, response)=>{
     
     const {name,age} = request.body
     const index = request.userIndex
     const id = request.userId
     const updatedUser = {id,name,age}
          
-    projects[index] = updatedUser
+    users [index] = updatedUser
 
 
     
@@ -55,17 +58,13 @@ app.put('/projects/:id', checkUserId, (request, response)=>{
  })
 
  
-app.delete('/projects/:id', checkUserId, (request, response)=>{
-     const index = request.userIndex
-
-  
+app.delete('/users/:id', checkUserId, (request, response)=>{
+     const index = request.userIndex;
      
-     projects.splice(index,1)
+     users.splice(index,1);
 
 
-
-
-    return response.status(204).json()
+    return response.status(204).json();
  })
 
 app.listen(port, () =>{
